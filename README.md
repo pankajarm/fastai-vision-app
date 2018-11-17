@@ -7,10 +7,17 @@ Everything packaged in docker with requirement.txt, so you can push it to any do
 Few docker hosted services where this starter pack will work =>
 
 https://zeit.co/now
+
 https://www.digitalocean.com/products/one-click-apps/docker/
+
 https://getcarina.com/
+
 https://sloppy.io/en/
+
 https://giantswarm.io
+
 https://aws.amazon.com/ecs/
+
 https://cloud.google.com/cloud-build/docs/
+
 https://azure.microsoft.com/en-us/services/app-service/containers/
