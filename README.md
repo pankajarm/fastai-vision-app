@@ -4,7 +4,7 @@ Produciton ready starter pack for creating fast responsive Web App for Fast.AI m
 
 Everything packaged in docker with requirement.txt, so you can push it to any docker hosted cloud service. Enjoy :)
 
-Few docker hosted services where this started pack will work =>
+Few docker hosted services where this starter pack will work =>
 
 https://zeit.co/now
 https://www.digitalocean.com/products/one-click-apps/docker/
