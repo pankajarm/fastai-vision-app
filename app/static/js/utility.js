@@ -56,10 +56,16 @@ function fileChange(e) {
                     canvas.getContext('2d').drawImage(image, 0, 0, w, h);
                 }
                 if (file.type == "image/jpeg") {
-                var dataURL = canvas.toDataURL("image/jpeg", 0.5);
+                var dataURL = canvas.toDataURL("image/jpeg", 0.80);
+                if (adjustImageFileSize(dataURL) > 1) {
+                    dataURL = canvas.toDataURL("image/jpeg", 0.50);
+                }
 
                 } else {
-                var dataURL = canvas.toDataURL("image/png", 0.5);
+                var dataURL = canvas.toDataURL("image/png", 0.80);
+                if (adjustImageFileSize(dataURL) > 1) {
+                    dataURL = canvas.toDataURL("image/png", 0.50);
+                }
                 }
                 el('image-picked').src = dataURL;
                 el('image-picked').className = '';
@@ -76,3 +82,69 @@ function fileChange(e) {
         alert('Please select image only in JPG or PNG format!');	
     }
 }
+
+function adjustImageFileSize(imageDataURL) {
+    
+    // var base64String = imageDataURL.split(",")[1];
+    // console.log("base64", base64String.length);
+  
+    // //console.log("non blob", stringToBytesFaster(base64String).length);
+    // var nonBlob = stringToBytesFaster(base64String).length;
+    // console.log("non blob", nonBlob/1000000, "MB", "-----", nonBlob/1000, "KB");
+  
+    var file = dataURLtoBlob(imageDataURL);
+    var size = file.size;
+  
+    var sizeKB = size/1000;
+    var sizeMB = size/1000000;
+    console.log("size", sizeMB, "MB", "-----", sizeKB, "KB");
+
+    return sizeMB;
+}
+
+function dataURLtoBlob(dataURL) {
+    // Decode the dataURL
+    var imageType = dataURL.split(',')[0];     
+    var binary = atob(dataURL.split(',')[1]);
+    // Create 8-bit unsigned array
+    var array = [];
+    for(var i = 0; i < binary.length; i++) {
+        array.push(binary.charCodeAt(i));
+    }
+    // Return our Blob object
+    // console.log("imageType", imageType);
+
+    if (imageType.indexOf("jpeg") >=0) {
+        return new Blob([new Uint8Array(array)], {type: 'image/jpeg'});
+    }
+    else {
+        return new Blob([new Uint8Array(array)], {type: 'image/png'});
+    }
+  }
+  
+//   function stringToBytesFaster ( str ) {
+//       var ch, st, re = [], j=0;
+//       for (var i = 0; i < str.length; i++ ) { 
+//           ch = str.charCodeAt(i);
+//           if(ch < 127)
+//           {
+//               re[j++] = ch & 0xFF;
+//           }
+//           else
+//           {
+//               st = [];    // clear stack
+//               do {
+//                   st.push( ch & 0xFF );  // push byte to stack
+//                   ch = ch >> 8;          // shift value down by 1 byte
+//               }
+//               while ( ch );
+//               // add stack contents to result
+//               // done because chars have "wrong" endianness
+//               st = st.reverse();
+//               for(var k=0;k<st.length; ++k)
+//                   re[j++] = st[k];
+//           }
+//       }   
+//       // return an array of bytes
+//       return re; 
+//   }
