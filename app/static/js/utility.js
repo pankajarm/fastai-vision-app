@@ -56,10 +56,10 @@ function fileChange(e) {
                     canvas.getContext('2d').drawImage(image, 0, 0, w, h);
                 }
                 if (file.type == "image/jpeg") {
-                var dataURL = canvas.toDataURL("image/jpeg");
+                var dataURL = canvas.toDataURL("image/jpeg", 0.5);
 
                 } else {
-                var dataURL = canvas.toDataURL("image/png");
+                var dataURL = canvas.toDataURL("image/png", 0.5);
                 }
                 el('image-picked').src = dataURL;
                 el('image-picked').className = '';
