@@ -1,2 +1,5 @@
 runtime: custom
 env: flex
+network:
+  forwarded_ports:
+    - tcp/5042
