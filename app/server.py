@@ -4,7 +4,6 @@ from starlette.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 import uvicorn, aiohttp, asyncio
 from io import BytesIO
-from fastai import *
 from fastai.vision import *
 import base64
 
