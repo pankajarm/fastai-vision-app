@@ -49,10 +49,11 @@ def predict_from_bytes(bytes):
     img = open_image(BytesIO(bytes))
     _,_,losses = learn.predict(img)
     predictions = sorted(zip(classes, map(float, losses)), key=lambda p: p[1], reverse=True)
-    fh = open(PREDICTION_FILE_SRC, "w")
-    fh.write(str(predictions[0:3]));fh.close()
-    result_html = path/'static'/'result.html'
-    return HTMLResponse(result_html.open().read())
+    result_html1 = path/'static'/'result1.html'
+    result_html2 = path/'static'/'result2.html'
+    
+    result_html = str(result_html1.open().read() +str(predictions[0:3]) + result_html2.open().read())
+    return HTMLResponse(result_html)
 
 @app.route("/")
 def form(request):
