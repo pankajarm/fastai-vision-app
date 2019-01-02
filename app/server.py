@@ -26,8 +26,7 @@ async def download_file(url, dest):
 
 async def setup_learner():
     await download_file(model_file_url, path/'models'/f'{model_file_name}.pth')
-    data_bunch = ImageDataBunch.single_from_classes(path, classes,
-        tfms=get_transforms(), size=150).normalize(imagenet_stats)
+    data_bunch = ImageDataBunch.single_from_classes(path, classes, tfms=get_transforms(), size=150).normalize(imagenet_stats)
     learn = create_cnn(data_bunch, models.resnet34, pretrained=False)
     learn.load(model_file_name)
     return learn
@@ -37,7 +36,6 @@ tasks = [asyncio.ensure_future(setup_learner())]
 learn = loop.run_until_complete(asyncio.gather(*tasks))[0]
 loop.close()
 
-IMG_FILE_SRC = path/'static'/'saved_image.png'
 PREDICTION_FILE_SRC = path/'static'/'predictions.txt'
 
 @app.route("/upload", methods=["POST"])
@@ -50,7 +48,6 @@ async def upload(request):
 def predict_from_bytes(bytes):
     img = open_image(BytesIO(bytes))
     _,_,losses = learn.predict(img)
-    img.save(IMG_FILE_SRC)
     predictions = sorted(zip(classes, map(float, losses)), key=lambda p: p[1], reverse=True)
     fh = open(PREDICTION_FILE_SRC, "w")
     fh.write(str(predictions[0:3]));fh.close()

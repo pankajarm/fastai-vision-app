@@ -19,7 +19,7 @@ function fileChange(e) {
 
     var file = e.target.files[0];
 
-    if (file.type == "image/jpeg" || file.type == "image/png") {
+    if (file.type == "image/jpeg" || file.type == "image/png" || file.type == "image/jp2") {
 
         var reader = new FileReader();  
         reader.onload = function(readerEvent) {
@@ -36,43 +36,55 @@ function fileChange(e) {
                 // console.log("Updated width:",w, "Updated height:", h);
 
                 var canvas = document.createElement('canvas');
-                // FORCEFUL to portrait mode only images
-                if (w > h) {
-                    // canvas.width = h;
-                    // canvas.height = w;
-                    canvas.width = w;
-                    canvas.height = h;
-                    var ctx = canvas.getContext('2d');
-                    // move the rotation point to the center of the rect
-                    // ctx.translate( h / 2, w / 2);
-                    ctx.translate( w / 2, h / 2);
-                    ctx.rotate(90 * Math.PI / 180);
-                    // ctx.drawImage(image, -h / 2, -w / 2, h, w);
-                    ctx.drawImage(image, -w / 2, -h / 2, w, h);
-                }
-                else {
-                    canvas.width = w;
-                    canvas.height = h;
-                    canvas.getContext('2d').drawImage(image, 0, 0, w, h);
-                }
+                // // FORCEFUL to portrait mode only images
+                // if (w > h) {
+                //     // canvas.width = h;
+                //     // canvas.height = w;
+                //     canvas.width = w;
+                //     canvas.height = h;
+                //     var ctx = canvas.getContext('2d');
+                //     // move the rotation point to the center of the rect
+                //     // ctx.translate( h / 2, w / 2);
+                //     ctx.translate( w / 2, h / 2);
+                //     // Rotate Image
+                //     ctx.rotate(-90 * Math.PI / 180);
+                //     // ctx.drawImage(image, -h / 2, -w / 2, h, w);
+                //     ctx.drawImage(image, -w / 2, -h / 2, w, h);
+                // }
+                // else {
+                //     canvas.width = w;
+                //     canvas.height = h;
+                //     canvas.getContext('2d').drawImage(image, 0, 0, w, h);
+                // }
+                
+                //  NO FORCEFUL Just Use Default Image
+                canvas.width = w;
+                canvas.height = h;
+                canvas.getContext('2d').drawImage(image, 0, 0, w, h);
+
                 if (file.type == "image/jpeg") {
                 var dataURL = canvas.toDataURL("image/jpeg", 0.80);
                 if (adjustImageFileSize(dataURL) > 1) {
                     dataURL = canvas.toDataURL("image/jpeg", 0.50);
                 }
 
-                } else {
-                var dataURL = canvas.toDataURL("image/png", 0.80);
-                if (adjustImageFileSize(dataURL) > 1) {
-                    dataURL = canvas.toDataURL("image/png", 0.50);
                 }
+                else {
+                    var dataURL = canvas.toDataURL("image/png", 0.80);
+                    if (adjustImageFileSize(dataURL) > 1) {
+                        dataURL = canvas.toDataURL("image/png", 0.50);
+                    }
                 }
                 el('image-picked').src = dataURL;
                 el('image-picked').className = '';
                 // before sending to server, split dataURL to send only data bytes
                 data_bytes = dataURL.split(',');
                 document.getElementById('inp_img').value = data_bytes[1];
-                // console.log("data_bytes:", data_bytes);
+                // save local data_bytes[1]
+                localStorage.setItem("imgData", data_bytes[1]);
+                var dataImage = localStorage.getItem('imgData');
+                // console.log("data_bytes[1]:", data_bytes[1]);
+                
             }
             image.src = readerEvent.target.result;
         }
