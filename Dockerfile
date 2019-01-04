@@ -1,9 +1,10 @@
 FROM python:3.6-slim-stretch
 
-RUN RUN apt-get update && apt-get install -y python3-dev gcc \
+RUN apt-get update && apt-get install -y python3-dev gcc \
     && rm -rf /var/lib/apt/lists/*
 
 ADD requirements.txt .
+
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app app/
