@@ -6,7 +6,7 @@ function fileChange(e) {
 
     var file = e.target.files[0];
 
-    if (file.type == "image/jpeg" || file.type == "image/png" || file.type == "image/jp2") {
+    if (file.type == "image/jpeg" || file.type == "image/png") {
 
         // Activate Submit Button
         el('submit_btn').type = "submit";
