@@ -1,26 +1,16 @@
-var FILE_CHANGE_FLAG = false;
-
 var el = x => document.getElementById(x);
-
-var submit_btn = document.getElementById('submit_btn').addEventListener('mouseover', submit_btn_mouseover);
-
-function submit_btn_mouseover(e) {
-    if (!FILE_CHANGE_FLAG) {
-        el('submit_btn').disabled = true;
-    }
-}
-
 
 var upload_img = document.getElementById('inp_file').addEventListener('change', fileChange, false);
 
 function fileChange(e) {
-    FILE_CHANGE_FLAG = true;
-    document.getElementById('inp_img').value = '';
 
     var file = e.target.files[0];
 
     if (file.type == "image/jpeg" || file.type == "image/png" || file.type == "image/jp2") {
 
+        // Activate Submit Button
+        el('submit_btn').type = "submit";
+        document.getElementById('inp_img').value = '';
         var reader = new FileReader();  
         reader.onload = function(readerEvent) {
 
