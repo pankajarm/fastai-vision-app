@@ -6,7 +6,7 @@ import uvicorn, aiohttp, asyncio
 from io import BytesIO
 from fastai.vision import *
 from fastai import *
-import base64
+# import base64
 
 model_file_url = 'https://www.dropbox.com/s/6bgq8t6yextloqp/export.pkl?raw=1'
 model_file_name = 'export.pkl'
@@ -27,7 +27,7 @@ async def download_file(url, dest):
 async def setup_learner():
     await download_file(model_file_url, path/'models'/f'{model_file_name}')
     try:
-        learn = load_learner(path, model_file_name)
+        learn = load_learner(path/'models', model_file_name)
         return learn
     except RuntimeError as e:
         if len(e.args) > 0 and 'CPU-only machine' in e.args[0]:
@@ -46,10 +46,9 @@ PREDICTION_FILE_SRC = path/'static'/'predictions.txt'
 
 @app.route("/upload", methods=["POST"])
 async def upload(request):
-    data = await request.form()
-    img_bytes = await (data["img"].read())
-    bytes = base64.b64decode(img_bytes)
-    return predict_from_bytes(bytes)
+    form = await request.form()
+    img_bytes = await (form["file"].read())
+    return predict_from_bytes(img_bytes)
 
 def predict_from_bytes(bytes):
     img = open_image(BytesIO(bytes))
