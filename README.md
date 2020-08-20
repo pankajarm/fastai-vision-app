@@ -5,8 +5,11 @@ Production ready starter pack for creating fast responsive Web App for Fast.AI I
 
 Everything packaged in docker with requirement.txt, so you can push it to any docker hosted cloud service. Enjoy :)
 
-Few dockers hosted services where this starter pack will work =>
+You can test your changes locally by installing Docker and using the following command:
 
+docker build -t fastai-v3 . && docker run --rm -it -p 8080:8080 fastai-v3
+
+Few dockers hosted services where this starter pack will work =>
 
 * https://render.com
 * https://zeit.co/now
