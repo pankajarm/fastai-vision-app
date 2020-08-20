@@ -6,7 +6,6 @@ import uvicorn, aiohttp, asyncio
 from io import BytesIO
 from fastai.vision import *
 from fastai import *
-# import base64
 
 model_file_url = 'https://www.dropbox.com/s/6bgq8t6yextloqp/export.pkl?raw=1'
 model_file_name = 'export.pkl'
