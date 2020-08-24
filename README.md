@@ -9,7 +9,7 @@ Everything packaged in docker with requirement.txt, so you can push it to any do
 
 You can test your changes locally by installing Docker and using the following command:
 
-docker build -t fastai-v3 . && docker run --rm -it -p 8080:8080 fastai-v3
+docker build -t fastai-v1 . && docker run --rm -it -p 8080:8080 fastai-v1
 
 Few dockers hosted services where this starter pack will work =>
 
