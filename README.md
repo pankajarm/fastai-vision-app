@@ -1,5 +1,7 @@
 # fastai-vision-app
 
+PLEASE READ: This repo is now archived and replaced by latest FASTAI Version 2 repo =>  https://github.com/psmathur/fastai2-vision-app
+
 
 Production ready starter pack for creating fast responsive Web App for Fast.AI Image models using Starlette.io framework with Uvicorn ASGI server.
 
