@@ -1,4 +1,4 @@
-FROM python:3.8-slim-buster
+FROM python:3.12-slim
 
 RUN apt-get update && apt-get install -y git python3-dev gcc \
     && rm -rf /var/lib/apt/lists/*
