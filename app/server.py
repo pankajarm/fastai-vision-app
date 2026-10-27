@@ -1,4 +1,5 @@
 from starlette.applications import Starlette
+from starlette.routing import Route
 from starlette.responses import HTMLResponse
 from starlette.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
@@ -43,7 +44,6 @@ loop.close()
 
 PREDICTION_FILE_SRC = path/'static'/'predictions.txt'
 
-@app.route("/upload", methods=["POST"])
 async def upload(request):
     form = await request.form()
     img_bytes = await (form["file"].read())
@@ -59,10 +59,12 @@ def predict_from_bytes(bytes):
     result_html = str(result_html1.open().read() +str(predictions[0:3]) + result_html2.open().read())
     return HTMLResponse(result_html)
 
-@app.route("/")
 def form(request):
     index_html = path/'static'/'index.html'
     return HTMLResponse(index_html.open().read())
+
+app.router.routes.append(Route("/upload", upload, methods=["POST"]))
+app.router.routes.append(Route("/", form))
 
 if __name__ == "__main__":
     if "serve" in sys.argv: uvicorn.run(app, host="0.0.0.0", port=8080)
