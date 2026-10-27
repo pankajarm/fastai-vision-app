@@ -3,13 +3,14 @@ from starlette.routing import Route
 from starlette.responses import HTMLResponse
 from starlette.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
-import uvicorn, aiohttp, asyncio
+import uvicorn, aiohttp, asyncio, hashlib, torch
 from io import BytesIO
 from fastai.vision import *
 from fastai import *
 
 model_file_url = 'https://www.dropbox.com/s/6bgq8t6yextloqp/export.pkl?raw=1'
 model_file_name = 'export.pkl'
+MODEL_SHA256 = '6c3e3a33a3f4eb20c9680795acd3a75b3e1714a70320abed3abd3184fbec2bc9'
 classes = ['black', 'grizzly', 'teddys']
 path = Path(__file__).parent
 
@@ -24,8 +25,23 @@ async def download_file(url, dest):
             data = await response.read()
             with open(dest, 'wb') as f: f.write(data)
 
+def _sha256(file_path):
+    h = hashlib.sha256()
+    with open(file_path, 'rb') as f:
+        for chunk in iter(lambda: f.read(1024 * 1024), b''):
+            h.update(chunk)
+    return h.hexdigest()
+
+
 async def setup_learner():
-    await download_file(model_file_url, path/'models'/f'{model_file_name}')
+    model_path = path/'models'/f'{model_file_name}'
+    await download_file(model_file_url, model_path)
+    if _sha256(model_path) != MODEL_SHA256:
+        raise RuntimeError('Model checksum mismatch - refusing to load')
+    # fastai 1.x pickles must load with weights_only=False; torch >= 2.6
+    # defaults to True. The checksum above pins the trusted artifact.
+    _orig_load = torch.load
+    torch.load = lambda *a, **k: _orig_load(*a, **{**k, 'weights_only': False})
     try:
         learn = load_learner(path/'models', model_file_name)
         return learn
@@ -36,6 +52,8 @@ async def setup_learner():
             raise RuntimeError(message)
         else:
             raise
+    finally:
+        torch.load = _orig_load
 
 loop = asyncio.get_event_loop()
 tasks = [asyncio.ensure_future(setup_learner())]
